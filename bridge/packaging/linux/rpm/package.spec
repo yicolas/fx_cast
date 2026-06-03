@@ -14,14 +14,20 @@ Requires: avahi, avahi-compat-libdns_sd, nss-mdns
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT/{{{executablePath}}} \
-         $RPM_BUILD_ROOT/{{{manifestPath}}}
+mkdir -p $RPM_BUILD_ROOT/{{{executablePath}}}
+{{#manifestPaths}}
+mkdir -p $RPM_BUILD_ROOT/{{{manifestPath}}}
+{{/manifestPaths}}
 
 cp %{_distdir}/{{{executableName}}} $RPM_BUILD_ROOT/{{{executablePath}}}
 cp %{_distdir}/{{{bindingName}}} $RPM_BUILD_ROOT/{{{executablePath}}}
+{{#manifestPaths}}
 cp %{_distdir}/{{{manifestName}}} $RPM_BUILD_ROOT/{{{manifestPath}}}
+{{/manifestPaths}}
 
 %files
 {{{executablePath}}}/{{{executableName}}}
 {{{executablePath}}}/{{{bindingName}}}
+{{#manifestPaths}}
 {{{manifestPath}}}/{{{manifestName}}}
+{{/manifestPaths}}

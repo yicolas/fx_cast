@@ -246,12 +246,12 @@ NODE_PATH="${modulesDir}" node $(dirname $0)/src/main.js --__name $(basename $0)
  * @param {string} arch
  */
 async function packageApp(platform, arch) {
-    /** @type {[ string, string, string, string ]} */
+    /** @type {[ string, string, string, string[] ]} */
     const packageFnArgs = [
         arch,
         paths.getExecutableName(platform),
         paths.getExecutableDirectory(platform, arch),
-        paths.getManifestDirectory(platform, arch, argv.packageType)
+        paths.getManifestDirectories(platform, arch, argv.packageType)
     ];
 
     switch (platform) {
@@ -294,13 +294,13 @@ async function packageApp(platform, arch) {
  * @param {string} arch
  * @param {string} platformExecutableName
  * @param {string} platformExecutableDirectory
- * @param {string} platformManifestDirectory
+ * @param {string[]} platformManifestDirectories
  */
 function packageDarwin(
     arch,
     platformExecutableName,
     platformExecutableDirectory,
-    platformManifestDirectory
+    platformManifestDirectories
 ) {
     const outputName = `${config.applicationName}-${config.applicationVersion}-${arch}.pkg`;
     const componentName = `${config.applicationName}_component.pkg`;
@@ -314,14 +314,15 @@ function packageDarwin(
         rootPath,
         platformExecutableDirectory
     );
-    const rootManifestDirectory = path.join(
-        rootPath,
-        platformManifestDirectory
+    const rootManifestDirectories = platformManifestDirectories.map(
+        manifestDirectory => path.join(rootPath, manifestDirectory)
     );
 
     // Create install locations
     fs.mkdirSync(rootExecutableDirectory, { recursive: true });
-    fs.mkdirSync(rootManifestDirectory, { recursive: true });
+    for (const manifestDirectory of rootManifestDirectories) {
+        fs.mkdirSync(manifestDirectory, { recursive: true });
+    }
 
     // Move files to root
     fs.moveSync(
@@ -332,10 +333,14 @@ function packageDarwin(
         path.join(BUILD_PATH, NATIVE_BINDING_NAME),
         path.join(rootExecutableDirectory, NATIVE_BINDING_NAME)
     );
-    fs.moveSync(
-        path.join(BUILD_PATH, paths.MANIFEST_NAME),
-        path.join(rootManifestDirectory, paths.MANIFEST_NAME)
-    );
+    const manifestPath = path.join(BUILD_PATH, paths.MANIFEST_NAME);
+    for (const manifestDirectory of rootManifestDirectories) {
+        fs.copyFileSync(
+            manifestPath,
+            path.join(manifestDirectory, paths.MANIFEST_NAME)
+        );
+    }
+    fs.rmSync(manifestPath);
 
     // Copy static files to be processed
     fs.copySync(packagingDir, packagingOutputDir);
@@ -346,7 +351,9 @@ function packageDarwin(
         componentName,
         packageId: `tf.matt.${config.applicationName}`,
         executablePath: platformExecutableDirectory,
-        manifestPath: platformManifestDirectory
+        manifestPaths: platformManifestDirectories.map(manifestPath => ({
+            manifestPath
+        }))
     };
 
     // Template paths
@@ -397,13 +404,13 @@ function packageDarwin(
  * @param {string} arch
  * @param {string} platformExecutableName
  * @param {string} platformExecutableDirectory
- * @param {string} platformManifestDirectory
+ * @param {string[]} platformManifestDirectories
  */
 function packageLinuxDeb(
     arch,
     platformExecutableName,
     platformExecutableDirectory,
-    platformManifestDirectory
+    platformManifestDirectories
 ) {
     const outputName = `${config.applicationName}-${config.applicationVersion}-${arch}.deb`;
 
@@ -413,13 +420,14 @@ function packageLinuxDeb(
         rootPath,
         platformExecutableDirectory
     );
-    const rootManifestDirectory = path.join(
-        rootPath,
-        platformManifestDirectory
+    const rootManifestDirectories = platformManifestDirectories.map(
+        manifestDirectory => path.join(rootPath, manifestDirectory)
     );
 
     fs.mkdirSync(rootExecutableDirectory, { recursive: true });
-    fs.mkdirSync(rootManifestDirectory, { recursive: true });
+    for (const manifestDirectory of rootManifestDirectories) {
+        fs.mkdirSync(manifestDirectory, { recursive: true });
+    }
 
     // Move files to root
     fs.moveSync(
@@ -430,10 +438,14 @@ function packageLinuxDeb(
         path.join(BUILD_PATH, NATIVE_BINDING_NAME),
         path.join(rootExecutableDirectory, NATIVE_BINDING_NAME)
     );
-    fs.moveSync(
-        path.join(BUILD_PATH, paths.MANIFEST_NAME),
-        path.join(rootManifestDirectory, paths.MANIFEST_NAME)
-    );
+    const manifestPath = path.join(BUILD_PATH, paths.MANIFEST_NAME);
+    for (const manifestDirectory of rootManifestDirectories) {
+        fs.copyFileSync(
+            manifestPath,
+            path.join(manifestDirectory, paths.MANIFEST_NAME)
+        );
+    }
+    fs.rmSync(manifestPath);
 
     const controlDir = path.join(__dirname, "../packaging/linux/deb/DEBIAN/");
     const controlOutputDir = path.join(rootPath, path.basename(controlDir));
@@ -476,13 +488,13 @@ function packageLinuxDeb(
  * @param {string} arch
  * @param {string} platformExecutableName
  * @param {string} platformExecutableDirectory
- * @param {string} platformManifestDirectory
+ * @param {string[]} platformManifestDirectories
  */
 function packageLinuxRpm(
     arch,
     platformExecutableName,
     platformExecutableDirectory,
-    platformManifestDirectory
+    platformManifestDirectories
 ) {
     const outputName = `${config.applicationName}-${config.applicationVersion}-${arch}.rpm`;
 
@@ -498,7 +510,9 @@ function packageLinuxRpm(
         applicationName: config.applicationName,
         applicationVersion: config.applicationVersion,
         executablePath: platformExecutableDirectory,
-        manifestPath: platformManifestDirectory,
+        manifestPaths: platformManifestDirectories.map(manifestPath => ({
+            manifestPath
+        })),
         executableName: platformExecutableName,
         manifestName: paths.MANIFEST_NAME,
         bindingName: NATIVE_BINDING_NAME

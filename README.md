@@ -5,11 +5,11 @@
 
 # fx_cast
 
-A Firefox extension that implements the Chromecast API and exposes it to web apps to enable cast support. Communication with receiver devices is handled by a companion application (bridge).
+A Firefox/LibreWolf extension that implements the Chromecast API and exposes it to web apps to enable cast support. Communication with receiver devices is handled by a companion application (bridge).
 
 ## Installing
 
-Install the Firefox extension (from within Firefox) and bridge application via the installer packages. These are two separate downloads that can be found on the [website](https://hensm.github.io/fx_cast/) or in the [GitHub releases](https://github.com/hensm/fx_cast/releases) section.
+Install the Firefox extension (from within Firefox or LibreWolf) and bridge application via the installer packages. These are two separate downloads that can be found on the [website](https://hensm.github.io/fx_cast/) or in the [GitHub releases](https://github.com/hensm/fx_cast/releases) section.
 
 The bridge application is currently supported on Windows, macOS and Linux.
 
@@ -92,8 +92,9 @@ $ npm install
 $ npm run build
 
 # Install manifest for dist/ build. Installs to
-# user-specific location and overrides a system-wide
-# install. Call `remove-manifest` to restore previous state.
+# user-specific Firefox and LibreWolf locations on
+# macOS/Linux and overrides a system-wide install.
+# Call `remove-manifest` to restore previous state.
 $ npm run install-manifest
 $ npm run remove-manifest
 ```
@@ -101,9 +102,11 @@ $ npm run remove-manifest
 This will build the extension and bridge, outputting to `dist/`:
 
 -   `dist/bridge/`  
-     ... contains the built bridge with launcher script and manifest (with the path pointing that script). The `install-manifest` npm script copies this manifest to the proper location (or adds its current location to the registry on Windows).
+     ... contains the built bridge with launcher script and manifest (with the path pointing that script). The `install-manifest` npm script copies this manifest to the proper Firefox and LibreWolf locations on macOS/Linux (or adds its current location to the Mozilla registry key used by Firefox and LibreWolf on Windows).
 -   `dist/extension/`  
      ... contains the unpacked extension.
+
+LibreWolf uses its own native messaging host directories on macOS/Linux, so builds from source need the updated manifest install step above. The packaged bridge installers now install manifests for both Firefox and LibreWolf on macOS/Linux. On Windows, LibreWolf uses the same native messaging registry key as Firefox.
 
 Watching extension changes:
 
