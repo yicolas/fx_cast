@@ -8,7 +8,7 @@
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <title>fx_cast: Chromecast for Firefox</title>
+        <title>fx_cast: Chromecast for Firefox and LibreWolf</title>
 
         <link rel="stylesheet" href="fonts/stylesheet.css" />
         <link rel="stylesheet" href="photon-colors.css" />
@@ -27,7 +27,7 @@
                 <header class="site-header">
                     <h1 class="site-header__title">fx_cast</h1>
                     <p class="site-header__subtitle">
-                        Chromecast <nobr>for Firefox</nobr>
+                        Chromecast <nobr>for Firefox and LibreWolf</nobr>
                     </p>
                 </header>
             </div>
@@ -37,9 +37,10 @@
                         <div>
                             <div class="description">
                                 <p>
-                                    A Firefox extension that enables Chromecast
-                                    support for casting web apps (like YouTube,
-                                    Netflix or BBC iPlayer) and HTML5 media.
+                                    A Firefox/LibreWolf extension that enables
+                                    Chromecast support for casting web apps
+                                    (like YouTube, Netflix or BBC iPlayer) and
+                                    HTML5 media.
                                 </p>
                                 <p class="disclaimer">
                                     Requires a companion bridge application to
@@ -317,6 +318,42 @@
                                                 </p>
                                             </li>
                                         </ul>
+                                    </div>
+                                </details>
+                            </li>
+                            <li class="faqs__list-item">
+                                <details class="faq">
+                                    <summary class="faq__summary">
+                                        <h3>Does LibreWolf work?</h3>
+                                    </summary>
+                                    <div class="faq__content">
+                                        <p>
+                                            Yes. Install the same extension build
+                                            in LibreWolf, then install the bridge
+                                            as normal.
+                                        </p>
+                                        <p>
+                                            Bridge installers and
+                                            <code>npm run install-manifest</code>
+                                            install the native messaging
+                                            manifest into Mozilla/Firefox native
+                                            messaging locations.
+                                        </p>
+                                        <p>
+                                            LibreWolf documentation recommends
+                                            symlinking LibreWolf native
+                                            messaging host directories to the
+                                            Mozilla/Firefox locations on macOS
+                                            and Linux. If your LibreWolf setup
+                                            does not already do this, create the
+                                            symlink first.
+                                        </p>
+                                        <p>
+                                            On Windows, LibreWolf uses the same
+                                            native messaging registry key as
+                                            Firefox, so no extra setup is
+                                            required.
+                                        </p>
                                     </div>
                                 </details>
                             </li>

@@ -32,23 +32,23 @@ switch (platform) {
     // File-based manifests
     case "darwin":
     case "linux": {
-        // User-specific manifest within home directory
-        const manifestDirectory = path.join(
-            os.homedir(),
-            platform === "linux"
-                ? ".mozilla/native-messaging-hosts"
-                : paths.getManifestDirectory(platform, os.arch())
-        );
+        for (const manifestDirectory of paths.getUserManifestDirectories(
+            platform,
+            os.homedir()
+        )) {
+            const manifestPath = path.join(
+                manifestDirectory,
+                paths.MANIFEST_NAME
+            );
 
-        const manifestPath = path.join(manifestDirectory, paths.MANIFEST_NAME);
-
-        if (argv.remove) {
-            // Uninstall manifest
-            fs.rmSync(manifestPath);
-        } else {
-            // Install manifest
-            fs.mkdirSync(manifestDirectory, { recursive: true });
-            fs.copyFileSync(newManifestPath, manifestPath);
+            if (argv.remove) {
+                // Uninstall manifest
+                fs.rmSync(manifestPath, { force: true });
+            } else {
+                // Install manifest
+                fs.mkdirSync(manifestDirectory, { recursive: true });
+                fs.copyFileSync(newManifestPath, manifestPath);
+            }
         }
 
         break;

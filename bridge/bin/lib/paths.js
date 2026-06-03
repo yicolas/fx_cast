@@ -21,6 +21,16 @@ export const pkgPlatformMap = {
 
 export const MANIFEST_NAME = `${config.applicationName}.json`;
 
+const MANIFEST_DIR_DARWIN = [
+    "/Library/Application Support/Mozilla/NativeMessagingHosts/"
+];
+const MANIFEST_DIR_LINUX_DEB = [
+    "/usr/lib/mozilla/native-messaging-hosts/"
+];
+const MANIFEST_DIR_LINUX_RPM = [
+    "/usr/lib64/mozilla/native-messaging-hosts/"
+];
+
 /**
  * @param {string} platform
  * @returns {string}
@@ -70,17 +80,12 @@ export function getExecutableDirectory(platform, arch) {
  * @param {string} platform
  * @param {string} arch
  * @param {string} [linuxPackageType]
- * @returns {string}
+ * @returns {string[]}
  */
-export function getManifestDirectory(platform, arch, linuxPackageType) {
-    const MANIFEST_DIR_DARWIN =
-        "/Library/Application Support/Mozilla/NativeMessagingHosts/";
-    const MANIFEST_DIR_LINUX_DEB = "/usr/lib/mozilla/native-messaging-hosts/";
-    const MANIFEST_DIR_LINUX_RPM = "/usr/lib64/mozilla/native-messaging-hosts/";
-
+export function getManifestDirectories(platform, arch, linuxPackageType) {
     switch (platform) {
         case "win32":
-            return getExecutableDirectory(platform, arch);
+            return [getExecutableDirectory(platform, arch)];
         case "darwin":
             return MANIFEST_DIR_DARWIN;
         case "linux":
@@ -95,4 +100,35 @@ export function getManifestDirectory(platform, arch, linuxPackageType) {
     }
 
     throw new Error("No manifest directory for specified platform!");
+}
+
+/**
+ * @param {string} platform
+ * @param {string} arch
+ * @param {string} [linuxPackageType]
+ * @returns {string}
+ */
+export function getManifestDirectory(platform, arch, linuxPackageType) {
+    return getManifestDirectories(platform, arch, linuxPackageType)[0];
+}
+
+/**
+ * @param {string} platform
+ * @param {string} homePath
+ * @returns {string[]}
+ */
+export function getUserManifestDirectories(platform, homePath) {
+    switch (platform) {
+        case "darwin":
+            return [
+                path.join(
+                    homePath,
+                    "Library/Application Support/Mozilla/NativeMessagingHosts"
+                )
+            ];
+        case "linux":
+            return [path.join(homePath, ".mozilla/native-messaging-hosts")];
+    }
+
+    throw new Error("No user manifest directories for specified platform!");
 }

@@ -3,9 +3,11 @@
 # If the target location isn't root, we need to rewrite
 # the manifest path to point to the user directory.
 if [ "$2" != "/" ]; then
+{{#manifestPaths}}
     installedManifestPath=$2"/{{{manifestPath}}}/{{{manifestName}}}"
     sed -i.bak 's,{{{executablePath}}},'$2'{{{executablePath}}},g' "$installedManifestPath"
     rm  "$installedManifestPath.bak"
+{{/manifestPaths}}
 fi
 
 exit 0
