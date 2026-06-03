@@ -92,8 +92,8 @@ $ npm install
 $ npm run build
 
 # Install manifest for dist/ build. Installs to
-# user-specific Firefox and LibreWolf locations on
-# macOS/Linux and overrides a system-wide install.
+# user-specific Mozilla/Firefox location and
+# overrides a system-wide install.
 # Call `remove-manifest` to restore previous state.
 $ npm run install-manifest
 $ npm run remove-manifest
@@ -102,11 +102,11 @@ $ npm run remove-manifest
 This will build the extension and bridge, outputting to `dist/`:
 
 -   `dist/bridge/`  
-     ... contains the built bridge with launcher script and manifest (with the path pointing that script). The `install-manifest` npm script copies this manifest to the proper Firefox and LibreWolf locations on macOS/Linux (or adds its current location to the Mozilla registry key used by Firefox and LibreWolf on Windows).
+     ... contains the built bridge with launcher script and manifest (with the path pointing that script). The `install-manifest` npm script copies this manifest to the Mozilla/Firefox native messaging location on macOS/Linux (or adds its current location to the Mozilla registry key used by Firefox and LibreWolf on Windows).
 -   `dist/extension/`  
      ... contains the unpacked extension.
 
-LibreWolf uses its own native messaging host directories on macOS/Linux, so builds from source need the updated manifest install step above. The packaged bridge installers now install manifests for both Firefox and LibreWolf on macOS/Linux. On Windows, LibreWolf uses the same native messaging registry key as Firefox.
+LibreWolf documentation recommends symlinking LibreWolf native messaging host directories to Mozilla/Firefox locations on macOS/Linux. `fx_cast` installs one manifest into the Mozilla/Firefox location and relies on that documented symlink/shared-path behavior for LibreWolf. On Windows, LibreWolf uses the same native messaging registry key as Firefox.
 
 Watching extension changes:
 

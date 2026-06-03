@@ -22,16 +22,13 @@ export const pkgPlatformMap = {
 export const MANIFEST_NAME = `${config.applicationName}.json`;
 
 const MANIFEST_DIR_DARWIN = [
-    "/Library/Application Support/Mozilla/NativeMessagingHosts/",
-    "/Library/Application Support/LibreWolf/NativeMessagingHosts/"
+    "/Library/Application Support/Mozilla/NativeMessagingHosts/"
 ];
 const MANIFEST_DIR_LINUX_DEB = [
-    "/usr/lib/mozilla/native-messaging-hosts/",
-    "/usr/lib/librewolf/native-messaging-hosts/"
+    "/usr/lib/mozilla/native-messaging-hosts/"
 ];
 const MANIFEST_DIR_LINUX_RPM = [
-    "/usr/lib64/mozilla/native-messaging-hosts/",
-    "/usr/lib64/librewolf/native-messaging-hosts/"
+    "/usr/lib64/mozilla/native-messaging-hosts/"
 ];
 
 /**
@@ -127,17 +124,10 @@ export function getUserManifestDirectories(platform, homePath) {
                 path.join(
                     homePath,
                     "Library/Application Support/Mozilla/NativeMessagingHosts"
-                ),
-                path.join(
-                    homePath,
-                    "Library/Application Support/LibreWolf/NativeMessagingHosts"
                 )
             ];
         case "linux":
-            return [
-                path.join(homePath, ".mozilla/native-messaging-hosts"),
-                path.join(homePath, ".librewolf/native-messaging-hosts")
-            ];
+            return [path.join(homePath, ".mozilla/native-messaging-hosts")];
     }
 
     throw new Error("No user manifest directories for specified platform!");

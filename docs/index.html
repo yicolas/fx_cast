@@ -333,14 +333,20 @@
                                             as normal.
                                         </p>
                                         <p>
-                                            Bridge installers now install native
-                                            messaging manifests for both Firefox
-                                            and LibreWolf on macOS and Linux. If
-                                            you're building from source, rerun
+                                            Bridge installers and
                                             <code>npm run install-manifest</code>
-                                            after building so the manifest is
-                                            copied into LibreWolf's native
-                                            messaging directory too.
+                                            install the native messaging
+                                            manifest into Mozilla/Firefox native
+                                            messaging locations.
+                                        </p>
+                                        <p>
+                                            LibreWolf documentation recommends
+                                            symlinking LibreWolf native
+                                            messaging host directories to the
+                                            Mozilla/Firefox locations on macOS
+                                            and Linux. If your LibreWolf setup
+                                            does not already do this, create the
+                                            symlink first.
                                         </p>
                                         <p>
                                             On Windows, LibreWolf uses the same
@@ -440,12 +446,6 @@
                                                     Support/Mozilla/NativeMessagingHosts/fx_cast_bridge.json</code
                                                 >
                                             </li>
-                                            <li>
-                                                <code
-                                                    >/Library/Application
-                                                    Support/LibreWolf/NativeMessagingHosts/fx_cast_bridge.json</code
-                                                >
-                                            </li>
                                         </ul>
 
                                         <h4>Linux</h4>
@@ -477,17 +477,7 @@
                                             </li>
                                             <li>
                                                 <code
-                                                    >/usr/lib/librewolf/native-messaging-hosts/fx_cast_bridge.json</code
-                                                >
-                                            </li>
-                                            <li>
-                                                <code
                                                     >/usr/lib64/mozilla/native-messaging-hosts/fx_cast_bridge.json</code
-                                                >
-                                            </li>
-                                            <li>
-                                                <code
-                                                    >/usr/lib64/librewolf/native-messaging-hosts/fx_cast_bridge.json</code
                                                 >
                                             </li>
                                         </ul>
